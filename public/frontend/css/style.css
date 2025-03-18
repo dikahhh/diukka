@@ -1,0 +1,431 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #30acff;
+}
+
+/* Hero Section */
+.hero {
+    background-image: url('/storage/images/vespa.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    margin-bottom: 30px;
+}
+
+.cta-btn {
+    padding: 10px 20px;
+    background-color: #00eaff;
+    color: #333;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 30px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.cta-btn:hover {
+    background-color: #00bcfb;
+}
+
+/* Services Section */
+.services {
+    display: flex;
+    justify-content: space-between;
+    padding: 50px 20px;
+    background-color: #ffffff;
+    margin-top: -20px;
+}
+
+.service-card {
+    background-color: #ffffffa7;
+    padding: 30px;
+    width: 30%;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+}
+
+.service-card h3 {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+}
+
+.service-card p {
+    font-size: 1rem;
+    color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .services {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .service-card {
+        width: 80%;
+        margin-bottom: 20px;
+    }
+
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+}
+
+/* Reset */
+body, ul, li, a {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Navbar Container */
+.navbar-container {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: #ffffff; /* White background */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: all 0.3s ease-in-out;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    max-width: 1500px;
+    margin: auto;
+}
+
+/* Logo */
+.navbar-logo a {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #007BFF; /* Blue */
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+
+.navbar-logo a:hover {
+    color: #0056b3;
+}
+
+/* Menu */
+.navbar-menu {
+    display: flex;
+    gap: 30px;
+}
+
+.navbar-menu li a {
+    font-size: 1rem;
+    color: #333;
+    font-weight: 500;
+    text-transform: capitalize;
+    padding: 5px 10px;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+}
+
+.navbar-menu li a:hover {
+    color: #007BFF; /* Blue */
+    border-bottom: 2px solid #007BFF;
+}
+
+/* Buttons */
+.navbar-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn {
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Log In Button */
+.login-btn {
+    background-color: transparent;
+    color: #007BFF;
+    border: 2px solid #007BFF;
+}
+
+.login-btn:hover {
+    background-color: #007BFF;
+    color: white;
+}
+
+/* Register Button */
+.register-btn {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+}
+
+.register-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Sticky Effect: Shrink on Scroll */
+.navbar-container.scrolled {
+    background-color: #f0f8ff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 5px 15px;
+}
+
+.navbar-container.scrolled .navbar-logo a {
+    font-size: 1.5rem;
+}
+
+.navbar-container.scrolled .navbar-menu li a {
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar-menu {
+        display: none;
+    }
+
+    .navbar-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .navbar-toggler {
+        display: block;
+    }
+}
+
+
+.service-card button {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #00eaff; /* Warna merah-oranye yang mencolok */
+    color: #000000;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 50px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 10px rgba(97, 139, 255, 0.3);
+}
+
+.service-card button:hover {
+    background-color: #0084ff; /* Warna lebih gelap saat hover */
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(80, 125, 230, 0.5);
+}
+
+.service-card button:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 10px rgba(97, 121, 255, 0.3);
+}
+
+/* footer  */
+
+/* General Footer Styles */
+footer {
+    background: linear-gradient(135deg, #2c3e50, #4ca1af);
+    color: #fff;
+    padding: 60px 20px;
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+/* Footer Column Styles */
+.footer_col {
+    flex: 1 1 30%;
+    margin-bottom: 40px;
+    padding: 0 15px;
+    text-align: left;
+}
+
+.footer_col h2 {
+    font-size: 18px;
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    position: relative;
+}
+
+.footer_col h2::after {
+    content: '';
+    width: 60px;
+    height: 3px;
+    background: #ff6f61;
+    position: absolute;
+    left: 0;
+    bottom: -5px;
+}
+
+.footer_col p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.footer_col a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer_col a:hover {
+    color: #ff6f61;
+}
+
+/* Social Media Styles */
+#social {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+#social li a {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 20px;
+    line-height: 50px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+#social li a:hover {
+    background: #ff6f61;
+    transform: translateY(-5px);
+}
+
+/* Footer Bottom Styles */
+.footer_bottom {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+}
+
+.footer_bottom a {
+    color: #ff6f61;
+    text-decoration: none;
+}
+
+.footer_bottom a:hover {
+    text-decoration: underline;
+}
+
+.footer_bottom span {
+    font-weight: bold;
+    color: #fff;
+}
+
+/* Decorative Background Effects */
+footer::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    z-index: 0;
+    animation: floating 6s ease-in-out infinite;
+}
+
+footer::after {
+    content: '';
+    position: absolute;
+    bottom: -50px;
+    right: -50px;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    z-index: 0;
+    animation: floating 8s ease-in-out infinite;
+}
+
+footer .container,
+.footer_bottom {
+    position: relative;
+    z-index: 1;
+}
+
+/* Floating Animation */
+@keyframes floating {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .footer_col {
+        flex: 1 1 100%;
+        text-align: center;
+    }
+
+    #social {
+        justify-content: center;
+    }
+}
