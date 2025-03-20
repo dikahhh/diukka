@@ -17,7 +17,7 @@
             <!-- Modal Pop-Up -->
             <div x-show="showCreate" class="fixed inset-0 flex items-center justify-center z-50">
                 <!-- Latar Belakang Gelap -->
-                <div class="absolute inset-0 bg-black opacity-50" @click="showCreate = false"></div>
+                <div class="absolute inset-0 bg-transparent" @click="showCreate = false"></div>
 
                 <!-- Konten Modal -->
                 <div class="bg-white w-full max-w-md p-6 rounded-lg shadow-lg z-10">
@@ -81,7 +81,7 @@
                                         <!-- Modal Pop-Up -->
                                         <div x-show="showEdit" class="fixed inset-0 flex items-center justify-center z-50">
                                             <!-- Latar Belakang Gelap -->
-                                            <div class="absolute inset-0 bg-black opacity-50" @click="showEdit = false"></div>
+                                            <div class="absolute inset-0 bg-transparent" @click="showEdit = false"></div>
 
                                             <!-- Konten Modal -->
                                             <div class="bg-white w-full max-w-md p-6 rounded-lg shadow-lg z-10">

@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="{{ asset('backend/js/app.js') }}">
     <script src="https://unpkg.com/alpinejs" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    
+    <!-- Include jQuery dan jQuery UI (pastikan ini sudah ter-include) -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 </head>
 <body class="bg-white">
     @include('backend.layouts.errors')

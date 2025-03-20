@@ -32,9 +32,9 @@
           </div>
           <h3 class="text-xl font-semibold mb-2">Maintenance</h3>
           <p class="text-gray-600 mb-4">Regular check-ups and tune-ups to keep your motor in top condition.</p>
-          <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full transition duration-300">
+          <a href="{{ route('frontend.service') }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full transition duration-300">
             Learn More
-          </button>
+          </a>
         </div>
         <!-- Repairs -->
         <div class="bg-gray-50 shadow-lg rounded-lg p-6 text-center hover:shadow-2xl transition duration-300">
@@ -43,7 +43,7 @@
           </div>
           <h3 class="text-xl font-semibold mb-2">Repairs</h3>
           <p class="text-gray-600 mb-4">Quick and reliable repairs for all types of motorcycles.</p>
-          <a href="{{ route('kendaraan.create') }}" class="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-full transition duration-300">
+          <a href="{{ route('frontend.kendaraan') }}" class="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-full transition duration-300">
             Learn More
           </a>
         </div>
@@ -54,9 +54,7 @@
           </div>
           <h3 class="text-xl font-semibold mb-2">Accessories</h3>
           <p class="text-gray-600 mb-4">High-quality accessories to enhance your motorcycle experience.</p>
-          <button class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-full transition duration-300">
-            Learn More
-          </button>
+          
         </div>
       </div>
     </div>

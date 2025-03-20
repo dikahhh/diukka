@@ -46,6 +46,9 @@
       <a href="{{ route('karyawan.index') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-purple-700 transition">
         <i class="fas fa-users text-lg"></i><span>Karyawan</span>
       </a>
+      <a href="{{ route('libur.index') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-purple-700 transition">
+        <i class="fas fa-users text-lg"></i><span>libur</span>
+      </a>
       <a href="{{ route('service.index') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-purple-700 transition">
         <i class="fas fa-tools text-lg"></i><span>Service</span>
       </a>

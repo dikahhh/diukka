@@ -11,13 +11,13 @@
       <!-- Keluhan -->
       <div>
         <label for="keluhan" class="block text-sm font-medium text-gray-700 mb-2">Keluhan (Opsional)</label>
-        <textarea name="keluhan" id="keluhan" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300" placeholder="Masukkan keluhan...">{{ old('keluhan') }}</textarea>
+        <textarea name="keluhan" id="keluhan" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Masukkan keluhan...">{{ old('keluhan') }}</textarea>
       </div>
 
       <!-- Dropdown Cabang -->
       <div>
         <label for="cabang_id" class="block text-sm font-medium text-gray-700 mb-2">Cabang</label>
-        <select name="cabang_id" id="cabang_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+        <select name="cabang_id" id="cabang_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
           <option value="">Pilih Cabang</option>
           @foreach($cabangs as $cabang)
             <option value="{{ $cabang->id }}">{{ $cabang->nama }}</option>
@@ -28,21 +28,21 @@
       <!-- Dropdown Tempat (hidden default) -->
       <div id="tempatContainer" class="hidden">
         <label for="tempat_id" class="block text-sm font-medium text-gray-700 mb-2">Tempat</label>
-        <select name="tempat_id" id="tempat_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+        <select name="tempat_id" id="tempat_id" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
           <option value="">Pilih Tempat</option>
         </select>
       </div>
 
       <!-- Dropdown Kendaraan (berdasarkan no_plat) -->
       @php
-          // Jika $bookedNoPlat belum tersedia, hitung berdasarkan tanggal minimal booking
+       // Jika $bookedNoPlat belum tersedia, hitung berdasarkan tanggal minimal booking
           $bookedNoPlat = $bookedNoPlat ?? \App\Models\Booking::where('tanggal', $minDate)->pluck('kendaraan')->toArray();
       @endphp
       <div>
         <label for="no_plat" class="block text-sm font-medium text-gray-700 mb-2">Kendaraan (No Plat)</label>
-        <select name="no_plat" id="no_plat" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+        <select name="no_plat" id="no_plat" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
           <option value="">-- Pilih Kendaraan --</option>
-          @foreach ($kendaraan as $k)
+          @foreach($kendaraan as $k)
             <option value="{{ $k->no_plat }}" {{ in_array($k->no_plat, $bookedNoPlat) ? 'disabled' : '' }}>
               {{ $k->no_plat }} - {{ $k->merk }}
               @if (in_array($k->no_plat, $bookedNoPlat))
@@ -56,12 +56,12 @@
       <!-- Input Tanggal -->
       <div>
         <label for="tanggal" class="block text-sm font-medium text-gray-700 mb-2">Tanggal</label>
-        <input type="date" 
+        <!-- Ubah type menjadi text agar jQuery UI Datepicker aktif -->
+        <input type="text" 
                name="tanggal" 
                id="tanggal" 
                value="{{ old('tanggal', $minDate) }}" 
-               min="{{ $minDate }}"
-               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
         <p class="mt-2 text-sm text-gray-500">
           Booking akan memiliki slot waktu otomatis. Jadwal operasional: 07:00–17:00.
           Jika sudah lewat jam 17.00, booking untuk hari ini tidak diperbolehkan.
@@ -69,14 +69,14 @@
       </div>
 
       <!-- Tombol Submit -->
-      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
         Buat Booking
       </button>
     </form>
   </div>
 </div>
 
-<!-- JavaScript untuk memuat dropdown Tempat berdasarkan cabang yang dipilih -->
+<!-- Script untuk memuat dropdown Tempat berdasarkan Cabang -->
 <script>
 document.getElementById('cabang_id').addEventListener('change', function() {
   var cabangId = this.value;
@@ -103,4 +103,31 @@ document.getElementById('cabang_id').addEventListener('change', function() {
   }
 });
 </script>
+
+
+<!-- Script jQuery UI Datepicker dengan disable tanggal libur -->
+@php
+    // Pastikan $holidayDates adalah array dengan format tanggal "YYYY-MM-DD"
+    $holidayDates = $holidayDates ?? [];
+@endphp
+<script>
+  $(function() {
+      // Array tanggal libur (pastikan formatnya "YYYY-MM-DD")
+      var holidays = @json($holidayDates);
+      console.log("Holiday dates:", holidays); // Debug: tampilkan array tanggal libur di console
+  
+      $("#tanggal").datepicker({
+          dateFormat: 'yy-mm-dd',
+          minDate: new Date("{{ $minDate }}"),
+          beforeShowDay: function(date) {
+              var formattedDate = $.datepicker.formatDate('yy-mm-dd', date);
+              console.log("Checking date:", formattedDate); // Debug
+              if (holidays.includes(formattedDate)) {
+                  return [false, "ui-state-disabled", "Hari Libur"];
+              }
+              return [true, "", ""];
+          }
+      });
+  });
+  </script>  
 @endsection

@@ -1,4 +1,3 @@
-
         <form action="{{ route('kendaraan.store') }}" method="POST" class="space-y-5">
             @csrf
 

@@ -21,7 +21,7 @@
 
         <!-- Tabel daftar penambahan stock -->
         <div class="overflow-x-auto">
-            <table id="tableTambahstock" class="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
+            <table id="tableTambahstock" class="min-w-full bg-white border border-gray-300 rounded-lg shadow-md text-sm">
                 <thead>
                     <tr class="bg-gradient-to-r from-blue-200 to-teal-200 text-gray-800 uppercase text-sm leading-normal">
                         <th class="py-3 px-6 text-left">No.</th>

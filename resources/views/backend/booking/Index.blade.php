@@ -57,10 +57,15 @@
                                     <form action="{{ route('booking.updateWaktu', ['booking' => $b->id]) }}" method="POST">
                                         @csrf
                                         @method('PATCH')
+                                        @php
+                                            // Memanggil seluruh slot waktu tanpa filter konflik
+                                            $allSlots = app()->make(\App\Http\Controllers\Backend\BookingController::class)
+                                                        ->getAllWaktuSlots($b->tanggal);
+                                        @endphp
                                         <select name="waktu" class="border-gray-300 rounded px-2 py-1">
                                             <option value="">Pilih Waktu</option>
-                                            @foreach($availableTimes as $time)
-                                                <option value="{{ $time }}">{{ $time }}</option>
+                                            @foreach($allSlots as $slot)
+                                                <option value="{{ $slot }}">{{ $slot }}</option>
                                             @endforeach
                                         </select>
                                         <button type="submit" class="ml-2 text-sm text-blue-500 hover:text-blue-700">Update</button>
@@ -68,7 +73,7 @@
                                 @else
                                     {{ $b->waktu }}
                                 @endif
-                            </td>
+                            </td>                            
                             <td class="border px-3 py-2 text-gray-600">
                                 <form action="{{ route('booking.updateStatus', ['booking' => $b->id]) }}" method="POST">
                                     @csrf

@@ -16,7 +16,7 @@
             <!-- Modal Pop-Up -->
             <div x-show="showCreate" class="fixed inset-0 flex items-center justify-center z-50">
                 <!-- Latar Belakang Gelap -->
-                <div class="absolute inset-0 bg-black opacity-70" @click="showCreate = false"></div>
+                <div class="absolute inset-0 bg-transparent" @click="showCreate = false"></div>
 
                 <!-- Konten Modal -->
                 <div class="bg-white w-full max-w-md p-4 rounded-lg shadow-lg z-10 border border-gray-300">
@@ -45,7 +45,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($cabang as $index => $item)
+                    @foreach ($cabangs as $index => $item)
                         <tr class="hover:bg-blue-50 transition duration-150">
                             <td class="border px-3 py-2 text-gray-600">{{ $index + 1 }}</td>
                             <td class="border px-3 py-2 text-gray-600 font-medium">{{ $item->nama }}</td>
@@ -69,7 +69,7 @@
                                         <!-- Modal Pop-Up -->
                                         <div x-show="editCreate" class="fixed inset-0 flex items-center justify-center z-50">
                                             <!-- Latar Belakang Gelap -->
-                                            <div class="absolute inset-0 bg-black opacity-70" @click="editCreate = false"></div>
+                                            <div class="absolute inset-0 bg-transparent" @click="editCreate = false"></div>
 
                                             <!-- Konten Modal -->
                                             <div class="bg-white w-full max-w-md p-4 rounded-lg shadow-lg z-10 border border-gray-300">

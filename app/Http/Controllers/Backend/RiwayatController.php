@@ -6,17 +6,36 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Riwayat;
 use App\Models\Sparepart;
+use App\Models\Service;
 use Illuminate\Support\Facades\Log;
 
 class RiwayatController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         if (!auth()->user()->can('riwayat.index')) {
-            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk melihat daftar booking.');
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin ');
         }
-        $riwayats = Riwayat::with('karyawan')->latest()->get();
-        return view('backend.riwayat.index', compact('riwayats'));
+
+        $search = $request->input('search', \Carbon\Carbon::today()->format('Y-m-d'));
+
+        if ($search) {
+            // Lakukan pencarian berdasarkan kolom-kolom yang relevan
+            $riwayats = Riwayat::where('ktp', 'LIKE', "%{$search}%")
+                ->orWhere('kendaraan', 'LIKE', "%{$search}%")
+                ->orWhere('jenis_service', 'LIKE', "%{$search}%")
+                ->orWhere('tanggal', 'LIKE', "%{$search}%")
+                ->orWhereHas('kendaraanRel', function ($query) use ($search) {
+                    $query->where('merk', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('karyawan', function ($query) use ($search) {
+                    $query->where('nama', 'LIKE', "%{$search}%");
+                })
+                ->with('karyawan')
+                ->latest()
+                ->get();
+        }
+        return view('backend.riwayat.index', compact('riwayats', 'search'));
     }
 
     public function Invoice(Riwayat $riwayat)
@@ -27,20 +46,28 @@ class RiwayatController extends Controller
 
     public function create()
     {
+        $cabangs = \App\Models\Cabang::all();
         $karyawans = \App\Models\Karyawan::all();
-        $spareparts = Sparepart::all();
-        // Jika form create tidak memerlukan detail booking, jangan sertakan variabel $booking.
-        return view('backend.riwayat.create', compact('karyawans', 'spareparts'));
+        $spareparts = \App\Models\Sparepart::all();
+        $services   = \App\Models\Service::all(); // Ambil data service untuk dropdown
+        return view('backend.riwayat.create', compact('karyawans', 'spareparts', 'services', 'cabangs'));
     }
 
     public function store(Request $request)
     {
-        // Validasi data dasar
+        // Validasi semua input agar tidak ada kolom yang kosong
         $request->validate([
             'jenis_service' => 'required|string',
             'tanggal'       => 'required|date',
             'karyawan_id'   => 'required|exists:karyawan,id',
             'catatan'       => 'nullable|string',
+            'keluhan'       => 'required|string',
+            'cabang'        => 'required|string',
+            'tempat'        => 'required|string',
+            'no_antrian'    => 'required|integer',
+            'ktp'           => 'required|string',
+            'kendaraan'     => 'required|string',
+            'harga_service' => 'required|numeric',
         ]);
 
         try {
@@ -70,11 +97,23 @@ class RiwayatController extends Controller
                 $additionalDetails[] = ['description' => $desc, 'amount' => $amount];
             }
 
-            // Total harga adalah jumlah dari sparepart dan dana tambahan
-            $totalHarga = $totalSparepartPrice + $totalAdditional;
+            // Total harga adalah spareparts + dana tambahan + harga service
+            $totalHarga = $totalSparepartPrice + $totalAdditional + $request->input('harga_service');
 
-            // Siapkan data untuk disimpan
-            $data = $request->only(['jenis_service', 'tanggal', 'karyawan_id', 'catatan']);
+            // Siapkan data untuk disimpan ke tabel riwayat
+            $data = $request->only([
+                'jenis_service',
+                'tanggal',
+                'karyawan_id',
+                'catatan',
+                'keluhan',
+                'cabang',
+                'tempat',
+                'no_antrian',
+                'ktp',
+                'kendaraan',
+                'harga_service'
+            ]);
             $data['harga'] = $totalHarga;
             $data['dana_tambahan'] = $totalAdditional;
             $data['dana_tambahan_deskripsi'] = json_encode($additionalDetails);
@@ -82,7 +121,7 @@ class RiwayatController extends Controller
             // Buat record Riwayat baru
             $riwayat = Riwayat::create($data);
 
-            // Attach spareparts ke riwayat 
+            // Attach spareparts dengan quantity masing-masing
             foreach ($sparepartsInput as $index => $sparepart_id) {
                 if (!empty($sparepart_id) && isset($quantities[$index]) && $quantities[$index] > 0) {
                     $qty = (float)$quantities[$index];
@@ -95,6 +134,19 @@ class RiwayatController extends Controller
             Log::error('Error saat menyimpan riwayat: ' . $e->getMessage(), $request->all());
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
         }
+    }
+
+    public function updateStatus(Request $request, Riwayat $riwayat)
+    {
+        $request->validate([
+            'status' => 'required|string'
+        ]);
+
+        $riwayat->update([
+            'status' => $request->status
+        ]);
+
+        return redirect()->route('riwayat.index')->with('success', 'Status berhasil diperbarui.');
     }
 
     public function edit(Riwayat $riwayat)

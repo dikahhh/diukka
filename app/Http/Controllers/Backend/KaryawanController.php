@@ -11,7 +11,7 @@ class KaryawanController extends Controller
      public function index()
      {
           if (!auth()->user()->can('karyawan.index')) {
-               return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk melihat daftar booking.');
+               return redirect()->back()->with('error', 'Anda tidak memiliki izin ');
            }
           $karyawans = Karyawan::all();
           return view('backend.karyawan.index', compact('karyawans'));

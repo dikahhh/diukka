@@ -12,10 +12,10 @@ class CabangController extends Controller
     public function index()
     {
         if (!auth()->user()->can('cabang.index')) {
-            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk melihat daftar booking.');
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin ');
         }
-        $cabang = Cabang::with('tempat')->get(); // Ambil semua cabang beserta tempatnya
-        return view('Backend.cabang.index', compact('cabang'));
+        $cabangs = Cabang::with('tempat')->get(); // Ambil semua cabang beserta tempatnya
+        return view('Backend.cabang.index', compact('cabangs'));
     }
 
     public function create()

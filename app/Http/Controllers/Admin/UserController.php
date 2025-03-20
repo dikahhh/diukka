@@ -14,6 +14,9 @@ class UserController extends Controller
     // Menampilkan daftar pengguna
     public function AdminRegister()
     {
+        if (!auth()->user()->can('adminregister')) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin ');
+        }
         $users = User::all();
         return view('admin.user.index', compact('users'));
     }

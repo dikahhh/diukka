@@ -16,6 +16,7 @@ use App\Http\Controllers\Backend\KaryawanController;
 use App\Http\Controllers\Backend\ServiceController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Backend\TambahStockController;
+use App\Http\Controllers\Backend\LiburController;
 
 
 Route::get('/', [FrontendController::class, 'index'])->name('frontend.index');
@@ -79,6 +80,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
     Route::patch('/user/{id}/update-role', [UserController::class, 'updateRole'])->name('admin.user.updateRole');
 
+    Route::resource('libur', LiburController::class);
+
     // Role
     Route::resource('roles', RoleController::class);
 
@@ -102,12 +105,13 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::put('/riwayat/{riwayat}', [RiwayatController::class, 'update'])->name('riwayat.update');
     Route::delete('/riwayat/{riwayat}', [RiwayatController::class, 'destroy'])->name('riwayat.destroy');
     Route::get('/riwayat/{riwayat}/invoice', [RiwayatController::class, 'Invoice'])->name('riwayat.invoice');
+    Route::patch('riwayat/{riwayat}/update-status', [RiwayatController::class, 'updateStatus'])->name('riwayat.updateStatus');
+
 
 
     // Halaman laporan keuangan dengan filter range tanggal
     Route::get('/laporan', [RiwayatController::class, 'laporanKeuangan'])->name('laporan.index');
     Route::get('/export-laporan-csv', [RiwayatController::class, 'exportCsv'])->name('laporan.export.csv');
-
 
 
     // Karyawan

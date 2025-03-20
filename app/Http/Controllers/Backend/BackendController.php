@@ -13,6 +13,9 @@ class BackendController extends Controller
 {
     public function index(Request $request)
     {
+        if (!auth()->user()->can('backend.index')) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin ');
+        }
         // Ambil daftar user yang online berdasarkan cache  
         $onlineUsers = [];
         foreach (User::all() as $user) {

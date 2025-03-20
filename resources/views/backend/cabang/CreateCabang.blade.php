@@ -1,4 +1,3 @@
-
         <form action="{{ route('cabang.store') }}" method="POST" class="space-y-4">
             @csrf
             

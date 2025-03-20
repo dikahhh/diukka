@@ -14,6 +14,9 @@ class TambahStockController extends Controller
      */
     public function index()
     {
+        if (!auth()->user()->can('stock.index')) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin ');
+        }
         // Ambil semua transaksi penambahan stock dengan relasi sparepart
         $tambahStocks = TambahStockSparepart::with('sparepart')
             ->orderBy('created_at', 'desc')

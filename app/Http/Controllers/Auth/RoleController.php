@@ -12,7 +12,7 @@ class RoleController extends Controller
     public function index()
     {
         if (!auth()->user()->can('roles.index')) {
-            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk melihat daftar booking.');
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin ');
         }
         $roles = Role::all();
         return view('admin.roles.index', compact('roles'));

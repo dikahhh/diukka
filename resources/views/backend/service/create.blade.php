@@ -3,7 +3,7 @@
         @csrf
 
         <div class="form-group my-3">
-            <label for="jenis_service">Jenis Service</label>
+            <label for="jenis_service" class="block text-sm text-gray-700 mb-1">Jenis Service</label>
             <input type="text" name="jenis_service" id="jenis_service" class="form-control" value="{{ old('jenis_service') }}">
             @error('jenis_service')
                 <small class="text-danger">{{ $message }}</small>

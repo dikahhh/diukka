@@ -11,7 +11,7 @@ class SparepartController extends Controller
      public function index()
      {
           if (!auth()->user()->can('sparepart.index')) {
-               return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk melihat daftar booking.');
+               return redirect()->back()->with('error', 'Anda tidak memiliki izin ');
            }
           $spareparts = Sparepart::all();
           return view('backend.sparepart.index', compact('spareparts'));

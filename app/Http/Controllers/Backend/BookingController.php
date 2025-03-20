@@ -9,6 +9,7 @@ use App\Models\Booking;
 use App\Models\Kendaraan;
 use App\Models\Cabang;
 use App\Models\Tempat;
+use App\Models\Libur;
 use Carbon\Carbon;
 
 class BookingController extends Controller
@@ -20,7 +21,7 @@ class BookingController extends Controller
     public function index(Request $request)
     {
         if (!auth()->user()->can('booking.index')) {
-            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk melihat daftar booking.');
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin ');
         }
         $tanggal = $request->input('tanggal', Carbon::today()->format('Y-m-d'));
 
@@ -37,6 +38,12 @@ class BookingController extends Controller
      */
     public function create()
     {
+        // Ambil data hari libur dari tabel Libur dan konversi ke array tanggal (format Y-m-d)
+        $liburs = Libur::all();
+        $holidayDates = $liburs->map(function($item) {
+            return \Carbon\Carbon::parse($item->tanggal)->format('Y-m-d');
+        })->toArray();
+
         $cabangs   = Cabang::all();
         $kendaraan = Kendaraan::where('ktp', Auth::user()->ktp)->get();
         $tempats   = []; // Akan dimuat via AJAX berdasarkan cabang yang dipilih
@@ -48,16 +55,15 @@ class BookingController extends Controller
         // Ambil daftar no_plat yang sudah terbooking pada tanggal $minDate
         $bookedNoPlat = Booking::where('tanggal', $minDate)->pluck('kendaraan')->toArray();
 
-        // Hitung available times
+        // Hitung available times (slot waktu booking)
         $bookingDate = $minDate;
-        $startOfDay = Carbon::parse($bookingDate . ' 07:00');
-        $endOfDay   = Carbon::parse($bookingDate . ' 17:00');
+        $startOfDay = \Carbon\Carbon::parse($bookingDate . ' 07:00');
+        $endOfDay   = \Carbon\Carbon::parse($bookingDate . ' 17:00');
         $latest     = $endOfDay->copy()->subHour();
         $availableTimes = [];
         $time = $startOfDay->copy();
-
         while ($time->lte($latest)) {
-            // Cek apakah ada konflik booking untuk waktu tersebut
+            // Cek konflik booking untuk slot tersebut
             $conflict = Booking::where('tanggal', $bookingDate)
                 ->where('waktu', 'like', $time->format('H:i') . '%')
                 ->exists();
@@ -67,8 +73,17 @@ class BookingController extends Controller
             $time->addHour();
         }
 
-        return view('backend.booking.CreateBooking', compact('cabangs', 'tempats', 'kendaraan', 'minDate', 'bookedNoPlat', 'availableTimes'));
+        return view('backend.booking.CreateBooking', compact(
+            'cabangs',
+            'tempats',
+            'kendaraan',
+            'minDate',
+            'bookedNoPlat',
+            'availableTimes',
+            'holidayDates'
+        ));
     }
+
 
     public function createformadmin()
     {
@@ -274,7 +289,7 @@ class BookingController extends Controller
 
     public function updateWaktu(Request $request, Booking $booking)
     {
-        // Validasi input waktu: opsional, jika diisi harus dalam format "H:i" (misalnya "07:00")
+        // Validasi input waktu: jika diisi, harus dalam format "H:i"
         $request->validate([
             'waktu' => 'nullable|date_format:H:i',
         ]);
@@ -282,33 +297,40 @@ class BookingController extends Controller
         // Set status booking secara otomatis ke "aprove"
         $updateData = ['status' => 'aprove'];
 
-        $tanggal = $booking->tanggal; // tanggal booking
-        // Dapatkan slot waktu yang tersedia untuk tanggal tersebut, 
-        // kecuali untuk booking yang sedang diupdate
-        $availableSlots = $this->getWaktuTersedia($tanggal, $booking);
-
         if ($request->filled('waktu')) {
-            // Jika admin memilih waktu, gunakan nilai tersebut sebagai waktu mulai
             $selectedStart = $request->waktu;
-            if (!in_array($selectedStart, $availableSlots)) {
-                return redirect()->back()->with('error', 'Slot waktu yang dipilih tidak tersedia.');
-            }
             $startTime = \Carbon\Carbon::createFromFormat('H:i', $selectedStart, 'Asia/Jakarta');
             $finishTime = $startTime->copy()->addHour();
             $updateData['waktu'] = $startTime->format('H:i') . ' - ' . $finishTime->format('H:i');
         } else {
-            // Jika tidak memilih waktu, ambil slot waktu kosong paling awal
-            if (empty($availableSlots)) {
-                return redirect()->back()->with('error', 'Tidak ada slot waktu yang tersedia untuk tanggal ini.');
-            }
-            $startTime = \Carbon\Carbon::createFromFormat('H:i', $availableSlots[0], 'Asia/Jakarta');
-            $finishTime = $startTime->copy()->addHour();
-            $updateData['waktu'] = $startTime->format('H:i') . ' - ' . $finishTime->format('H:i');
+            $updateData['waktu'] = $booking->waktu;
         }
 
         $booking->update($updateData);
+
         return redirect()->route('booking.index')->with('success', 'Status dan waktu booking berhasil diperbarui.');
     }
+
+
+    public function getAllWaktuSlots($tanggal)
+    {
+        $zone = 'Asia/Jakarta';
+        $slots = [];
+
+        // Tentukan waktu awal (07:00) dan waktu akhir (slot terakhir dimulai pukul 16:00)
+        $startTime = \Carbon\Carbon::parse($tanggal . ' 07:00', $zone);
+        $endTime   = \Carbon\Carbon::parse($tanggal . ' 17:00', $zone)->subHour();
+
+        // Buat slot setiap 30 menit
+        while ($startTime->lte($endTime)) {
+            $slots[] = $startTime->format('H:i');
+            $startTime->addMinutes(30);
+        }
+
+        return $slots;
+    }
+
+
 
 
 

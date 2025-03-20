@@ -13,6 +13,9 @@ class ServiceController extends Controller
      */
     public function index()
     {
+        if (!auth()->user()->can('Service.index')) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin ');
+        }
         $services = Service::all();
         return view('backend.service.index', compact('services'));
     }

@@ -45,13 +45,26 @@ class KendaraanController extends Controller
         return redirect()->route('frontend.index')->with('success', 'Data kendaraan berhasil ditambahkan.');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         if (!auth()->user()->can('kendaraan.index')) {
             return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk melihat daftar kendaraan.');
         }
-        $kendaraan = Kendaraan::all();
-        return view('backend.kendaraan.index', compact('kendaraan'));
+
+        $search = $request->input('search');
+
+        if ($search) {
+            // Lakukan pencarian berdasarkan no plat, merk, tipe, atau kolom lain yang diperlukan
+            $kendaraan = Kendaraan::where('no_plat', 'LIKE', "%{$search}%")
+                ->orWhere('merk', 'LIKE', "%{$search}%")
+                ->orWhere('tipe', 'LIKE', "%{$search}%")
+                ->orWhere('transmisi', 'LIKE', "%{$search}%")
+                ->get();
+        } else {
+            // Jika tidak ada filter, kembalikan koleksi kosong agar data tidak dirender
+            $kendaraan = collect();
+        }
+        return view('backend.kendaraan.index', compact('kendaraan', 'search'));
     }
 
     public function destroy($id)
